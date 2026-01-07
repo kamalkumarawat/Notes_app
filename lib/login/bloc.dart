@@ -8,7 +8,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(const LoginState()) {
 
     on<LoginSubmitted>((event, emit) async {
-      emit(state.copyWith(isSubmitting: true, error: null));
+      emit(state.copyWith(isSubmitting: true, error: null, isSuccess: false));
 
       try {
         final result = await FirebaseAuth.instance.signInWithEmailAndPassword(

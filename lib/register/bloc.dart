@@ -8,7 +8,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc() : super(const RegisterState()) {
 
     on<RegisterSubmitted>((event, emit) async {
-      emit(state.copyWith(isSubmitting: true, error: null));
+      emit(state.copyWith(isSubmitting: true, error: null,isSuccess: false));
 
       try {
         final result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
