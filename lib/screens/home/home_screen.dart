@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     InternetService.instance.initialize();
+    loadUserNotes();
+
     internetSubscription = InternetService.instance.onStatusChange.listen((
       status,
     ) {
@@ -38,14 +40,22 @@ class _HomeScreenState extends State<HomeScreen> {
         hasInternet = status;
       });
       if (status) {
-        final user = FirebaseAuth.instance.currentUser;
-        if (user != null && mounted) {
-          context.read<HomeBloc>().add(LoadUserNotes(user.uid));
-        }
+        loadUserNotes();
       }
     });
   }
+  @override
+  void dispose() {
+    internetSubscription.cancel();
+    super.dispose();
+  }
 
+  void loadUserNotes() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null && mounted) {
+      context.read<HomeBloc>().add(LoadUserNotes(user.uid));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -60,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             : BlocConsumer<HomeBloc, HomeState>(
                 listener: (context, state) {},
                 builder: (context, state) {
-                  if (state is HomeLoading) {
+                  if (state is HomeLoading ) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
@@ -275,10 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           context: context,
                                                           builder: (_) => AlertDialog(
                                                             title: const Text(
-                                                              'Delete Note',
+                                                              'Delete Note',style: TextStyle(fontSize: 16),
                                                             ),
                                                             content: const Text(
-                                                              'Are you sure?',
+                                                              'Are you sure?',style: TextStyle(fontSize: 13)
                                                             ),
                                                             actions: [
                                                               TextButton(
